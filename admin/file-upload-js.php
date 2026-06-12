@@ -68,8 +68,7 @@ $(document).ready(function() {
     }).data('url');
 
     const btn = $('.upload-file');
-    const fileInput = $('<input type="file" name="file" multiple />').hide().insertAfter(btn);
-    let completeFile = false;
+    const fileInput = $('<input type="file" name="file" />').hide().insertAfter(btn);
 
     btn.click(function () {
         fileInput.click();
@@ -80,10 +79,8 @@ $(document).ready(function() {
         if (this.files.length === 0) {
             return;
         }
-        for (let i = 0; i < this.files.length; i ++) {
-            Typecho.uploadFile(this.files[i]);
-        }
-        completeFile = false;
+
+        Typecho.uploadFile(this.files[0]);
     });
 
     function fileUploadStart (file) {
@@ -139,10 +136,7 @@ $(document).ready(function() {
         attachDeleteEvent(li);
         updateAttachmentNumber();
 
-        if (!completeFile) {
-            Typecho.uploadComplete(attachment);
-            completeFile = true;
-        }
+        Typecho.uploadComplete(attachment);
     }
 
     Typecho.uploadFile = (function () {
