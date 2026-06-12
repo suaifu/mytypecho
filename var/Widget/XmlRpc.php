@@ -339,7 +339,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
 
         $input['text'] = !empty($content['mt_text_more']) ? $content['description']
             . "\n<!--more-->\n" . $content['mt_text_more'] : $content['description'];
-        $input['text'] = self::pluginHandle()->call('textFilter', $input['text'], $this);
+        $input['text'] = self::pluginHandle()->filter('textFilter', $input['text'], $this);
 
         $input['password'] = $content["wp_password"] ?? null;
         $input['order'] = $content["wp_page_order"] ?? null;
@@ -424,11 +424,11 @@ class XmlRpc extends Contents implements ActionInterface, Hook
         /** 调用已有组件 */
         if ('page' == $type) {
             $widget = PageEdit::alloc(null, $input, function (PageEdit $page) {
-                $page->writePage();
+                $page->prepare()->writePage();
             });
         } else {
             $widget = PostEdit::alloc(null, $input, function (PostEdit $post) {
-                $post->writePost();
+                $post->prepare()->writePost();
             });
         }
 
@@ -1719,7 +1719,7 @@ class XmlRpc extends Contents implements ActionInterface, Hook
                         ];
 
                         /** 加入plugin */
-                        $pingback = self::pluginHandle()->call('pingback', $pingback, $post);
+                        $pingback = self::pluginHandle()->filter('pingback', $pingback, $post);
 
                         /** 执行插入*/
                         $insertId = Comments::alloc()->insert($pingback);
