@@ -215,6 +215,18 @@ class Validate
     }
 
     /**
+     * 正则表达式验证
+     *
+     * @param string $str
+     * @param string $pattern
+     * @return bool
+     */
+    public static function regexp(string $str, string $pattern): bool
+    {
+        return preg_match($pattern, $str) === 1;
+    }
+
+    /**
      * 增加验证规则
      *
      * @access public
@@ -260,7 +272,7 @@ class Validate
      *
      * @return    array
      */
-    public function run(array $data, array $rules = null): array
+    public function run(array $data, ?array $rules = null): array
     {
         $result = [];
         $this->data = $data;
@@ -322,6 +334,8 @@ class Validate
      */
     public function required(): bool
     {
-        return !empty($this->data[$this->key]);
+        return array_key_exists($this->key, $this->data) &&
+            (is_array($this->data[$this->key]) ? 0 < count($this->data[$this->key])
+                : 0 < strlen($this->data[$this->key] ?? ''));
     }
 }
